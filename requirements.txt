@@ -1,0 +1,2 @@
+flask>=0.10.1
+bravado-core>=4.0.0

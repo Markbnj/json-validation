@@ -1,0 +1,151 @@
+swagger: '2.0'
+info:
+  title: My Cars API
+  description: Simple API for demonstrating json validation
+  version: 1.0.0
+host: localhost
+schemes:
+  - http
+basePath: /v1
+produces:
+  - application/json
+definitions:
+  Registration:
+    type: object
+    required:
+    - state
+    - plate_number
+    properties:
+      state:
+        type: string
+        description: Two letter state abbreviation code
+        pattern: '^[A-Z]{2}$'
+      plate_number:
+        type: string
+        description: The license plate number
+        minLength: 1
+        maxLength: 8
+  Car:
+    type: object
+    required:
+    - make
+    - model
+    - model_year
+    - doors
+    - vin
+    - color
+    properties:
+      make:
+        type: string
+        description: The name of the vehicle manufacturer
+      model:
+        type: string
+        description: The name of the vehicle model
+      model_year:
+        type: string
+        description: The manufacturers model year
+        pattern: '^[0-9]{2,4}$'
+        minLength: 2
+      doors:
+        type: integer
+        description: The number of doors
+        minimum: 2
+        maximum: 5
+      vin:
+        type: string
+        description: The vehicle VIN number
+        pattern: '^[a-zA-Z0-9]{17}$'
+      color:
+        type: string
+        description: Manufacturers vehicle color
+      registration:
+        $ref: '#/definitions/Registration'
+  Cars:
+    type: object
+    required:
+    - results
+    properties:
+      results:
+        type: array
+        items:
+          $ref: '#/definitions/Car'
+        description: list of Car objects
+  Error:
+    type: object
+    properties:
+      code:
+        type: integer
+        description: the http status code
+        minimum: 400
+        maximum: 599
+      message:
+        type: string
+paths:
+  /swagger:
+    get:
+      summary: Return swagger API specification
+      description: |
+        Returns the My Cars API spec as a json swagger doc.
+      tags:
+        - Meta
+      responses:
+        '200':
+          description: The My Cars API spec as a json swagger doc.
+          schema:
+            type: string
+        '500':
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /postman:
+    get:
+      summary: Return postman collection for API endpoints
+      description: |
+        Returns a postman collection for endpoint testing in json format.
+      tags:
+        - Meta
+      responses:
+        '200':
+          description: The postman collection as a json object.
+          schema:
+            type: string
+        '500':
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /cars:
+    get:
+      summary: List all (dream) cars
+      description: |
+        Returns a list of all currently owned (in my dreams) cars.
+      tags:
+        - Cars
+      responses:
+        '200':
+          description: An array of Car objects
+          schema:
+            $ref: '#/definitions/Cars'
+        '500':
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      summary: Add a new (dream) car
+      description: |
+        Adds a new car to the database.
+      tags:
+        - Cars
+      parameters:
+        - name: car
+          schema:
+            $ref: '#/definitions/Car'
+          in: body
+          required: true
+          description: the new dream car
+      responses:
+        '200':
+          description: Succeeded
+        '500':
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/Error'
