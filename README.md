@@ -1,5 +1,7 @@
 # json-validation
-Code accompanying "Validating json models with swagger and bravado" on medium.com
+Code accompanying [Validate json models with swagger and bravado](https://medium.com/@betz.mark/validate-json-models-with-swagger-and-bravado-5fad6b21a825#.7ahlst9c5) on medium.com
+
+
 
 ## Resources
 
